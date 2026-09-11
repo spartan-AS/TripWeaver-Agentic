@@ -1,4 +1,4 @@
-**React frontend (replacement for Streamlit)**
+**React frontend **
 
 Quick steps:
 
