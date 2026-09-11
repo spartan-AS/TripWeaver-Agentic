@@ -76,19 +76,19 @@ export default function App() {
   }
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", fontFamily: "Arial, sans-serif" }}>
-      <aside style={{ width: 300, padding: 20, borderRight: "1px solid #eee" }}>
+    <div className="app-root">
+      <aside className="sidebar">
         <h3>Session</h3>
         <div style={{ marginBottom: 8 }}>
-          <label>User ID</label>
+          <label style={{ color: "var(--muted)" }}>User ID</label>
           <input
-            style={{ width: "100%" }}
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
           />
         </div>
         <div style={{ marginBottom: 8 }}>
           <button
+            className="btn secondary"
             onClick={() => {
               const tid = genThreadId(userId);
               setThreadId(tid);
@@ -100,46 +100,48 @@ export default function App() {
           </button>
         </div>
 
-        <div style={{ marginTop: 12, fontSize: 12 }}>
+        <div className="thread-id">
           <strong>Thread:</strong>
-          <div style={{ wordBreak: "break-all" }}>{threadId}</div>
+          <div>{threadId}</div>
         </div>
       </aside>
 
-      <main style={{ flex: 1, padding: 20 }}>
-        <h1>Real-World Multi-Agent Travel Planner</h1>
+      <main className="main-content">
+        <h1 className="title">Real-World Multi-Agent Travel Planner</h1>
 
         <div>
           <textarea
+            className="query-input"
             placeholder="Plan a 7-day Japan trip under Rs. 2 lakh. I prefer budget hotels and no overnight flights."
-            style={{ width: "100%", minHeight: 110 }}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
 
         <div style={{ marginTop: 8 }}>
-          <button onClick={createDraft} disabled={loading}>
+          <button className="btn primary" onClick={createDraft} disabled={loading}>
             {loading ? "Agents are planning..." : "Create Draft Plan"}
           </button>
         </div>
 
         {result && (
-          <section style={{ marginTop: 20 }}>
+          <section className="section" style={{ marginTop: 20 }}>
             <h2>Supervisor Plan</h2>
-            {result.supervisor_reasoning && renderMarkdown(result.supervisor_reasoning)}
-            <div>
-              <strong>Selected agents:</strong> {JSON.stringify(result.selected_agents || [])}
+            {result.supervisor_reasoning && (
+              <div className="markdown">{renderMarkdown(result.supervisor_reasoning)}</div>
+            )}
+            <div style={{ marginTop: 8 }}>
+              <strong style={{ color: "var(--muted)" }}>Selected agents:</strong> {JSON.stringify(result.selected_agents || [])}
             </div>
 
-            <div style={{ display: "flex", gap: 20, marginTop: 12 }}>
-              <div style={{ flex: 1 }}>
+            <div className="columns">
+              <div className="col card">
                 <h3>Flight</h3>
                 {renderMarkdown(result.flight_results)}
                 <h3>Weather</h3>
                 {renderMarkdown(result.weather_results)}
               </div>
-              <div style={{ flex: 1 }}>
+              <div className="col card">
                 <h3>Hotels</h3>
                 {renderMarkdown(result.hotel_results)}
                 <h3>Budget</h3>
@@ -149,7 +151,7 @@ export default function App() {
 
             <div style={{ marginTop: 12 }}>
               <h3>Draft Itinerary</h3>
-              <div>
+              <div className="card">
                 {result.__interrupt__ ? (
                   renderMarkdown(result.__interrupt__[0]?.value?.draft_itinerary || "")
                 ) : (
@@ -161,10 +163,10 @@ export default function App() {
         )}
 
         {waitingForApproval && (
-          <div style={{ marginTop: 20, borderTop: "1px solid #eee", paddingTop: 12 }}>
+          <div className="approval">
             <h3>Human Approval</h3>
             <div>
-              <label>
+              <label style={{ marginRight: 12 }}>
                 <input
                   type="radio"
                   checked={approved === true}
@@ -172,7 +174,7 @@ export default function App() {
                 />
                 Approve
               </label>
-              <label style={{ marginLeft: 12 }}>
+              <label>
                 <input
                   type="radio"
                   checked={approved === false}
@@ -184,14 +186,13 @@ export default function App() {
             <div style={{ marginTop: 8 }}>
               <textarea
                 rows={4}
-                style={{ width: "100%" }}
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 disabled={approved === true}
               />
             </div>
             <div style={{ marginTop: 8 }}>
-              <button onClick={submitApproval} disabled={loading}>
+              <button className="btn primary" onClick={submitApproval} disabled={loading}>
                 Submit Approval
               </button>
             </div>
@@ -199,7 +200,7 @@ export default function App() {
         )}
 
         {result && result.final_response && (
-          <div style={{ marginTop: 20, borderTop: "1px solid #eee", paddingTop: 12 }}>
+          <div className="final-plan">
             <h2>Final Travel Plan</h2>
             {renderMarkdown(result.final_response)}
           </div>
